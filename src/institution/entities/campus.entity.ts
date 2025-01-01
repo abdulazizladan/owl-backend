@@ -13,7 +13,7 @@ export class Campus {
     @Column({})
     code: string;
 
-    @OneToOne(() => Address, {cascade: true})
+    @OneToOne(() => Address, address => address.campus_id, {cascade: true})
     address: Address;
 
     @ManyToOne(() => Institution, institution => institution.campus)

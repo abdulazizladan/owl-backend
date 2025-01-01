@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { User } from 'src/entities/user.entity';
+//import { User } from 'src/entities/user.entity';
 //import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
@@ -14,7 +14,7 @@ export class UserService {
         return
     }*/
 
-    async findOneByEmail( email: string ): Promise<User | null> {
+    /*async findOneByEmail( email: string ): Promise<User | null> {
         return
-    }
+    }*/
 }

@@ -14,12 +14,12 @@ import { Campus } from "./campus.entity";
   @Entity()
   export class Institution {
 
-    @PrimaryColumn({default: 1})
+    @PrimaryGeneratedColumn()
     id: number;
 
     @Column({})
     name: string;
-    
+  
     @Column({})
     phone: string;
 
@@ -38,7 +38,11 @@ import { Campus } from "./campus.entity";
     principal: Principal;
     boardMembers: BoardMember[];
 
-    @OneToMany(() => Campus, campus => campus.instituttion)
+    @OneToMany(
+      () => Campus, 
+      campus => campus.instituttion,
+      { cascade: true }
+    )
     campus: Campus[];
   }
   

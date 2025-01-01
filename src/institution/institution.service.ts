@@ -52,7 +52,7 @@ export class InstitutionService {
    */
   async findAll(): Promise<any> {
     try {
-      const institution = await this.institutionRepository.find();
+      const institution = await this.institutionRepository.find({ relations: ["campus", "campus.address"] });
       if(institution.length === 0) {
         return {
           success: true,
@@ -66,7 +66,6 @@ export class InstitutionService {
           message: "Institution fetched successfully"
         }
       }
-      
     }catch (error) {
       return {
         success: false,
@@ -83,7 +82,7 @@ export class InstitutionService {
    */
   async findOne(id: number): Promise<any> {
     try {
-      const data = await this.institutionRepository.findOne({ where: { id } });
+      const data = await this.institutionRepository.findOne({ where: { id }, relations: ["campus"] });
       if(data) {
         return {
           success: true,

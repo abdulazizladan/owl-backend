@@ -1,4 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsEmail } from "class-validator";
+import { CreateInstitutionCampusDto } from "./create-campus.dto";
 
 export class CreateInstitutionDto {
         @ApiProperty({type: 'integer'})
@@ -10,7 +12,8 @@ export class CreateInstitutionDto {
         @ApiProperty({type: 'string'})
         phone: string;
     
-        @ApiProperty({type: 'string'})
+        @ApiProperty({type: 'string', example: 'xxx@xxx.xx'})
+        @IsEmail({})
         email: string;
     
         @ApiProperty({type: 'string'})
@@ -21,4 +24,8 @@ export class CreateInstitutionDto {
     
         @ApiProperty({type: 'integer'})
         foundedYear: number;
+
+        //@ApiProperty({required: false})
+        //campus: CreateInstitutionCampus | null;
+
 }

@@ -7,7 +7,7 @@ export class Address {
     //@PrimaryGeneratedColumn()
     //address_id: number;
 
-    @OneToOne(() => Campus, {cascade: true})
+    @OneToOne(() => Campus, campus => campus.address)
     @JoinColumn({name: 'campus_address_id'})
     @PrimaryColumn()
     campus_id: number;
