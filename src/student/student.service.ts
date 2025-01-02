@@ -65,15 +65,62 @@ export class StudentService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} student`;
+  async findOne(id: number) {
+    try {
+      const data = await this.studentRepository.findOne({where: { id }});
+      if(data) {
+        return {
+          success: true,
+          data: data,
+          message: "Student found successfully"
+        }
+      }else {
+        return {
+          success: true,
+          data: null,
+          message: "Student not found"
+        }
+      }
+    } catch(error) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
   }
 
-  update(id: number, updateStudentDto: UpdateStudentDto) {
-    return `This action updates a #${id} student`;
+  async update(id: number, updateStudentDto: UpdateStudentDto) {
+    try {
+      await this.studentRepository.update(id, updateStudentDto);
+      return {
+        success: true,
+        message: "Student updated successfully"
+        }
+    } catch( error) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} student`;
+  /**
+   * 
+   * @param id  - ID of the student to be deleted
+   * @returns Promise resolving to an object with success flag and message.
+   */
+  async remove(id: number) {
+    try {
+      await this.studentRepository.delete(id);
+      return {
+        success: true,
+        message: "Student deleted successfully"
+      }
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message 
+      }
+    }
   }
 }

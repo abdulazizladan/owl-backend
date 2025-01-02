@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from "typeorm";
+/**import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from "typeorm";
 
 export enum UserRole {
     STUDENT = 'STUDENT',
@@ -15,10 +15,10 @@ export enum UserRole {
     @Column({unique: true})
     email: string;
 
-    @Column()
-    passwordHash: string;
+    @Column({default: 'password'})
+    password: string;
 
     @Column()
     role: UserRole;
-  }
+  }**/
   

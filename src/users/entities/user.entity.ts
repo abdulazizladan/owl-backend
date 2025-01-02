@@ -1,16 +1,23 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from "typeorm";
 
-@Entity({name: 'SystemUsers'})
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+export enum UserRole {
+    STUDENT = 'STUDENT',
+    STAFF = 'STAFF',
+    ADMIN = 'ADMIN',
+  }
+  
+  @Entity({name: 'User'})
+  export class User {
 
-  @Column()
-  username: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @Column()
-  passwordHash: string;
+    @Column({unique: true})
+    email: string;
 
-  @Column({ default: 'user' }) // Default role
-  role: string;
-}
+    @Column({default: 'password'})
+    password: string;
+
+    @Column()
+    role: UserRole;
+  }
