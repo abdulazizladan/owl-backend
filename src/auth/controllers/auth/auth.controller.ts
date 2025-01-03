@@ -27,7 +27,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post('login')
     @ApiOperation({summary: 'User login', description: 'Authenticate user and return a token'})
-    login(@Body() data: LoginDto) {
+    login(@Body() data: LoginDto): Record<string, any> {
         return this.authService.login(data);
     }
 

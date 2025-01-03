@@ -9,7 +9,8 @@ async function bootstrap() {
     .setTitle('Owl app API')
     .setDescription('Authentication API for my application')
     .setVersion('1.0')
-    .addTag('auth')
+    .addBearerAuth()
+    //.addTag('')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
