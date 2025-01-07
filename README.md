@@ -1,4 +1,5 @@
 # Modules
+## Dashboard stats
 * ## Institution management
   * ### Institution
     * Campus
@@ -39,3 +40,7 @@
   * Grade/class
   * Term
     * Curriculum
+* ## Facility management
+  * Building
+    * Floor
+      * Room

@@ -35,7 +35,9 @@ import { Campus } from "./campus.entity";
     @Column({})
     foundedYear: number;
 
+    //@Column({})
     principal: Principal;
+
     boardMembers: BoardMember[];
 
     @OneToMany(

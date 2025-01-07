@@ -6,10 +6,10 @@ export class MedicalInformation{
     @PrimaryColumn({name: 'id'})
     studentID: number;
 
-    @Column()
+    @Column({})
     blood_group: string;
     
-    @Column()
+    @Column({})
     genotype: string;
 
     @OneToOne(() => Student, (student) => student.medical_information)

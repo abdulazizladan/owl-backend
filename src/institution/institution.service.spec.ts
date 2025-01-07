@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { CreateInstitutionCampusDto } from './dto/create-campus.dto';
 import { InstitutionService } from './institution.service';
 
 describe('InstitutionService', () => {

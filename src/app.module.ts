@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { InstitutionModule } from './institution/institution.module';
 import { UsersModule } from './users/users.module';
 import { StudentModule } from './student/student.module';
+import { FacilityModule } from './facility/facility.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -18,7 +20,9 @@ import { StudentModule } from './student/student.module';
       database: 'db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
-    })
+    }),
+    FacilityModule,
+    //PaymentModule
   ],
   controllers: [AppController],
   providers: [

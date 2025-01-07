@@ -12,13 +12,13 @@ import { AuthGuard } from '../auth/auth.guard';
 export class InstitutionController {
   constructor(private readonly institutionService: InstitutionService) {}
 
-  @Post()
+  @Post('')
   @ApiOperation({summary: 'Add institution details', description: ''})
   create(@Body() createInstitutionDto: CreateInstitutionDto) {
     return this.institutionService.create(createInstitutionDto);
   }
 
-  @Get()
+  @Get('')
   @ApiOperation({summary: 'Get institution details', description: ''})
   findAll() {
     return this.institutionService.findAll();

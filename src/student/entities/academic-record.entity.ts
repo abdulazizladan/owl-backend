@@ -3,14 +3,14 @@ import { Student } from '../entities/student.entity';
 
 @Entity()
 export class AcademicRecord {
-  @PrimaryColumn()
+  @PrimaryColumn({})
   id: string;
 
-  @Column()
+  @Column({})
   term: string;
 
-  @Column()
-  year: string;
+  @Column({})
+  year: number;
 
   // ... other academic record fields
 

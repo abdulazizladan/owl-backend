@@ -1,0 +1,5 @@
+export enum Purpose {
+    classroom = "classroom",
+    office = "office",
+    store = "store",
+}
