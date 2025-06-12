@@ -7,7 +7,7 @@ import { InstitutionModule } from './institution/institution.module';
 import { UsersModule } from './users/users.module';
 import { StudentModule } from './student/student.module';
 import { FacilityModule } from './facility/facility.module';
-import { PaymentModule } from './payment/payment.module';
+//import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -24,7 +24,9 @@ import { PaymentModule } from './payment/payment.module';
     FacilityModule,
     //PaymentModule
   ],
-  controllers: [AppController],
+  controllers: [
+    AppController
+    ],
   providers: [
     AppService, 
   ],

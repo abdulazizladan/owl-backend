@@ -14,7 +14,7 @@ export class Principal {
     @Column()
     phone: string;
 
-    @Column()
+    @Column({})
     yearAppointed: number;
 
     @Column({nullable: true, default: null})
