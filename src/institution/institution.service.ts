@@ -30,7 +30,14 @@ export class InstitutionService {
    */
   async create(createInstitutionDto: CreateInstitutionDto): Promise<any> {
     try {
-      const institution = await this.institutionRepository.create(createInstitutionDto);
+      // Transform campus to array if present
+      const institutionData: any = { ...createInstitutionDto };
+      if (institutionData.campus) {
+        institutionData.campus = [institutionData.campus];
+      } else {
+        institutionData.campus = [];
+      }
+      const institution = this.institutionRepository.create(institutionData);
       await this.institutionRepository.save(institution);
       return {
         success: true,
@@ -113,7 +120,12 @@ export class InstitutionService {
    */
   async update(id: number, updateInstitutionDto: UpdateInstitutionDto): Promise<any> {
     try {
-      await this.institutionRepository.update(id, updateInstitutionDto);
+      // Transform campus to array if present
+      const updateData: any = { ...updateInstitutionDto };
+      if (updateData.campus) {
+        updateData.campus = [updateData.campus];
+      }
+      await this.institutionRepository.update(id, updateData);
       return {
         success: true,
         message: "Institution updated successfully"

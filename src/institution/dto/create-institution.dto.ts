@@ -25,7 +25,7 @@ export class CreateInstitutionDto {
         @ApiProperty({type: 'integer'})
         foundedYear: number;
 
-        //@ApiProperty({required: false})
-        //campus: CreateInstitutionCampus | null;
+        @ApiProperty({required: false, type: CreateInstitutionCampusDto})
+        campus: CreateInstitutionCampusDto | null;
 
 }
