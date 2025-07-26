@@ -1,9 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateInstitutionDto } from './dto/create-institution.dto';
+import { CreateCampusAddressDto } from './dto/create-campus-address.dto';
+import { CreateInstitutionCampusDto } from './dto/create-campus.dto';
 import { UpdateInstitutionDto } from './dto/update-institution.dto';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Institution } from './entities/institution.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Campus } from './entities/campus.entity';
+import { Address } from './entities/address.entity';
 
 /**
  * Service responsible for managing Institution entities.
@@ -19,7 +23,11 @@ export class InstitutionService {
    */
   constructor(
     @InjectRepository(Institution)
-    private readonly institutionRepository: Repository<Institution>
+    private readonly institutionRepository: Repository<Institution>,
+    @InjectRepository(Campus)
+    private readonly campusRepository: Repository<Campus>,
+    @InjectRepository(Address)
+    private readonly addressRepository: Repository<Address>
   ) {}
 
   /**
@@ -61,11 +69,7 @@ export class InstitutionService {
     try {
       const institution = await this.institutionRepository.find({ relations: ["campus", "campus.address"] });
       if(institution.length === 0) {
-        return {
-          success: true,
-          data: null,
-          message: "No records found"
-        }
+        throw new NotFoundException("Institution not found")
       }else{
         return {
           success: true,
