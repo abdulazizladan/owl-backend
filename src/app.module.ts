@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { InstitutionModule } from './institution/institution.module';
-import { UsersModule } from './users/users.module';
+import { UserModule } from './user/user.module';
 import { StudentModule } from './student/student.module';
 import { FacilityModule } from './facility/facility.module';
 //import { PaymentModule } from './payment/payment.module';
@@ -13,7 +13,7 @@ import { FacilityModule } from './facility/facility.module';
   imports: [
     AuthModule, 
     InstitutionModule,
-    UsersModule,
+    UserModule,
     StudentModule,
     TypeOrmModule.forRoot({
       type: 'sqlite',

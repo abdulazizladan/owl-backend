@@ -20,13 +20,12 @@ import {
   ApiBody, // For documenting request bodies
   ApiParam, // For documenting path parameters
 } from '@nestjs/swagger';
-import { AuthGuard } from 'src/auth/auth.guard'; // Ensure this path is correct
 
 // Assuming you have a Student entity/model for response types
 // import { Student } from './entities/student.entity'; // Example, adjust path as needed
 
 @ApiTags('Students') // Categorizes all endpoints in this controller under 'Students' tag
-@UseGuards(AuthGuard) // Applies AuthGuard to all routes in this controller
+//@UseGuards(AuthGuard) // Applies AuthGuard to all routes in this controller
 @ApiBearerAuth() // Indicates that all endpoints in this controller require a bearer token
 @Controller('student')
 export class StudentController {

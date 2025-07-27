@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { CreateInstitutionCampusDto } from '../dto/create-campus.dto';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
-import { AuthGuard } from 'src/auth/auth.guard';
+//import { AuthGuard } from 'src/auth/auth.guard';
 
-@UseGuards(AuthGuard)
+//@UseGuards(AuthGuard)
 @ApiBearerAuth()
 @Controller('institution')
 export class CampusController {

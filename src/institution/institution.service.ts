@@ -20,6 +20,8 @@ export class InstitutionService {
    * Injects the TypeORM repository for the Institution entity.
    * 
    * @param institutionRepository - Repository for Institution entities.
+   * @returns the created institution
+   * @throws 
    */
   constructor(
     @InjectRepository(Institution)
