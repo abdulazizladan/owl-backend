@@ -59,8 +59,9 @@ export class UserService {
     const suspendedUsers = await this.userRepository.countBy({status: Status.suspended})
     const removedUsers = await this.userRepository.countBy({status: Status.removed})
     const adminCount = await this.userRepository.countBy({role: Role.admin})
-    const directorsCount = await this.userRepository.countBy({role: Role.director})
-    const managersCount = await this.userRepository.countBy({role: Role.manager})
+    const staffCount = await this.userRepository.countBy({role: Role.staff})
+    const studentsCount = await this.userRepository.countBy({role: Role.student})
+    const guardianssCount = await this.userRepository.countBy({role: Role.guardian})
     try {
       return {
         success: true,
@@ -70,8 +71,9 @@ export class UserService {
           suspended: suspendedUsers,
           removed: removedUsers,
           admin: adminCount,
-          directors: directorsCount,
-          managers: managersCount
+          staff: staffCount,
+          students: studentsCount,
+          guardians: guardianssCount
         },
         message: "Status fetched successfully"
       }
