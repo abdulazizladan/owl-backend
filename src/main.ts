@@ -7,7 +7,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Owl app API')
-    .setDescription('API for my application')
+    .setDescription('API for Owl school information management system')
     .setVersion('1.0')
     .addBearerAuth()
     .addTag('')

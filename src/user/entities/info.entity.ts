@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
 import { User } from "./user.entity";
 import { IsString, IsOptional, IsNumber } from "class-validator";
 
-@Entity({name: "Info"})
+@Entity({name: "UserInfo"})
 export class Info {
     /**
      * Unique identifier for the info record (Primary Key)

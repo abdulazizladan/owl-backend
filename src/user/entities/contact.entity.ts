@@ -5,7 +5,7 @@ import { IsString, IsNumber } from "class-validator";
 /**
  * Contact entity representing user's contact information.
  */
-@Entity({name: "Contact"})
+@Entity({name: "UserContact"})
 export class Contact {
     /**
      * Unique identifier for the contact (Primary Key)

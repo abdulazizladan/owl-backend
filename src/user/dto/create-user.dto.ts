@@ -14,10 +14,11 @@ export class CreateUserDto {
         {
             enum: [
                 "admin", 
-                "director", 
-                "manager"
-            ], 
-            default: "manager"
+                "staff", 
+                "student",
+                "guardian"
+            ],
+            default: 'student'
         }
     )
     role: Role;
