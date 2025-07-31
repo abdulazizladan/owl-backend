@@ -43,7 +43,7 @@ export class User {
     /**
      * Status of the user (active, inactive, etc.)
      */
-    @Column({default: Status.active})
+    @Column({type: 'text', enum: Status, default: Status.pending})
     @IsEnum(Status)
     status: Status;
 
