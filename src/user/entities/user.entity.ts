@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, JoinColumn, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Info } from "./info.entity";
 import { Role } from "../enums/role.enum";
 import * as bcrypt from "bcrypt";
@@ -8,6 +8,8 @@ import { Status } from "../enums/status.enum";
 import { Exclude } from "class-transformer";
 
 import { IsEmail, IsEnum, IsString, IsOptional, IsDate, IsArray, IsNumber } from "class-validator";
+import { Form } from "src/classroom/entities/form.entity";
+import { Classroom } from "src/classroom/entities/classroom.entity";
 
 @Entity({name: "User"})
 export class User {
@@ -68,6 +70,12 @@ export class User {
     @IsOptional()
     contact: Contact; 
 
+    @OneToOne((type) => Form, form => form.formMaster)
+    @IsOptional()
+    form: Form;
+
+    @ManyToOne((type) => Classroom, classroom => classroom.students)
+    classroom: Classroom
     
     async validatePassword(password: string): Promise<boolean> {
         return bcrypt.compare(password, this.password);

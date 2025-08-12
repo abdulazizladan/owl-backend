@@ -7,7 +7,9 @@ import { InstitutionModule } from './institution/institution.module';
 import { UserModule } from './user/user.module';
 import { StudentModule } from './student/student.module';
 import { FacilityModule } from './facility/facility.module';
-//import { PaymentModule } from './payment/payment.module';
+import { PaymentModule } from './payment/payment.module';
+import { ClassroomModule } from './classroom/classroom.module';
+import { CalendarModule } from './calendar/calendar.module';
 
 @Module({
   imports: [
@@ -15,14 +17,17 @@ import { FacilityModule } from './facility/facility.module';
     InstitutionModule,
     UserModule,
     StudentModule,
+    FacilityModule,
+    ClassroomModule,
+    CalendarModule,
+    PaymentModule,
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    FacilityModule,
-    //PaymentModule
+    
   ],
   controllers: [
     AppController

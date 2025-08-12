@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CreateFacilityDto } from './dto/create-facility.dto';
-import { UpdateFacilityDto } from './dto/update-facility.dto';
+//import { CreateFacilityDto } from './dto/create-site.dto';
+//import { UpdateFacilityDto } from './dto/update-site.dto';
 
 @Injectable()
 export class FacilityService {
   
-  create(createFacilityDto: CreateFacilityDto) {
+  /**create(createFacilityDto: CreateFacilityDto) {
     return 'This action adds a new facility';
   }
 
@@ -23,5 +23,6 @@ export class FacilityService {
 
   remove(id: number) {
     return `This action removes a #${id} facility`;
-  }
+    
+  }**/
 }

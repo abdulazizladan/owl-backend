@@ -1,152 +1,219 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpStatus, // Import HttpStatus for clear response codes
-} from '@nestjs/common';
-import { FacilityService } from './facility.service';
-import { CreateFacilityDto } from './dto/create-facility.dto';
-import { UpdateFacilityDto } from './dto/update-facility.dto';
-import {
-  ApiTags, // For tagging the controller
-  ApiOperation, // For operation summaries and descriptions
-  ApiResponse, // For documenting responses
-  ApiBody, // For documenting request bodies
-  ApiParam, // For documenting path parameters
-} from '@nestjs/swagger'; // Make sure you have these imports
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { SiteService } from './site.service';
+import { BuildingService } from './building.service';
+import { ApplianceService } from './appliance.service';
+import { FurnitureService } from './furniture.service';
+import { VehicleService } from './vehicle.service';
+import { MaintenanceService } from './maintenance.service';
+import { CreateSiteDto } from './dto/create-site.dto';
+import { UpdateSiteDto } from './dto/update-site.dto';
+import { CreateBuildingDto } from './dto/create-building.dto';
+import { UpdateBuildingDto } from './dto/update-building.dto';
+import { CreateApplianceDto } from './dto/create-appliance.dto';
+import { UpdateApplianceDto } from './dto/update-appliance.dto';
+import { CreateFurnitureDto } from './dto/create-furniture.dto';
+import { UpdateFurnitureDto } from './dto/update-furniture.dto';
+import { CreateVehicleDto } from './dto/create-vehicle.dto';
+import { UpdateVehicleDto } from './dto/update-vehicle.dto';
+import { CreateMaintenanceDto } from './dto/create-maintenance.dto';
+import { UpdateMaintenanceDto } from './dto/update-maintenance.dto';
 
-// Assuming you have a Facility entity/model for response types
-// import { Facility } from './entities/facility.entity'; // Example, adjust path as needed
-
-@ApiTags('Facilities') // Tag all endpoints in this controller under 'Facilities'
+@ApiTags('Facilities')
 @Controller('facility')
 export class FacilityController {
-  constructor(private readonly facilityService: FacilityService) {}
+  constructor(
+    private readonly siteService: SiteService,
+    private readonly buildingService: BuildingService,
+    private readonly applianceService: ApplianceService,
+    private readonly furnitureService: FurnitureService,
+    private readonly vehicleService: VehicleService,
+    private readonly maintenanceService: MaintenanceService,
+  ) {}
 
-  @Post()
-  @ApiOperation({ summary: 'Create a new facility', description: 'Creates a new facility record in the database.' })
-  @ApiBody({ type: CreateFacilityDto, description: 'Data for creating a new facility.' })
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: 'The facility has been successfully created.',
-    // type: Facility, // If you have a Facility entity, use this to describe the response structure
-    schema: {
-      type: 'object',
-      properties: {
-        id: { type: 'number', description: 'The ID of the created facility.' },
-        name: { type: 'string', description: 'The name of the facility.' },
-        // Add other properties of the Facility entity here
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: 'Invalid input data.',
-  })
-  async create(@Body() createFacilityDto: CreateFacilityDto): Promise<any> {
-    // Adjust return type based on what your service actually returns
-    return await this.facilityService.create(createFacilityDto);
+  // Sites
+  @ApiOperation({ summary: 'Create site' })
+  @Post('sites')
+  createSite(@Body() dto: CreateSiteDto) {
+    return this.siteService.create(dto);
   }
 
-  @Get('/buildings') // Changed endpoint path for clarity if it's specifically for buildings
-  @ApiOperation({ summary: 'Get a list of all facilities', description: 'Retrieves a list of all facilities currently in the system.' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'A list of facilities.',
-    // type: [Facility], // If you have a Facility entity, use this for an array response
-    schema: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'number', description: 'The ID of the facility.' },
-          name: { type: 'string', description: 'The name of the facility.' },
-          // Add other properties of the Facility entity here
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.INTERNAL_SERVER_ERROR,
-    description: 'Server error.',
-  })
-  async findAll(): Promise<any[] | void> {
-    // Adjust return type based on what your service actually returns
-    //return await this.facilityService.findAll();
+  @ApiOperation({ summary: 'List sites' })
+  @Get('sites')
+  findAllSites() {
+    return this.siteService.findAll();
   }
 
-  @Get(':id') // Changed from 'building/:id' to just ':id' for consistency with resource
-  @ApiOperation({ summary: 'Get a facility by ID', description: 'Retrieves a single facility by its unique ID.' })
-  @ApiParam({ name: 'id', type: Number, description: 'The unique identifier of the facility.' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'The facility details.',
-    // type: Facility,
-    schema: {
-      type: 'object',
-      properties: {
-        id: { type: 'number', description: 'The ID of the facility.' },
-        name: { type: 'string', description: 'The name of the facility.' },
-        // Add other properties of the Facility entity here
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Facility not found.',
-  })
-  async findOne(@Param('id') id: string): Promise<any> {
-    // Adjust return type based on what your service actually returns
-    return await this.facilityService.findOne(+id);
+  @ApiOperation({ summary: 'Get site by id' })
+  @Get('sites/:id')
+  findSite(@Param('id') id: string) {
+    return this.siteService.findOne(id);
   }
 
-  @Patch(':id') // Changed from 'building/:id' to just ':id'
-  @ApiOperation({ summary: 'Update a facility', description: 'Updates an existing facility record identified by its ID.' })
-  @ApiParam({ name: 'id', type: Number, description: 'The unique identifier of the facility to update.' })
-  @ApiBody({ type: UpdateFacilityDto, description: 'Data for updating the facility.' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'The facility has been successfully updated.',
-    // type: Facility,
-    schema: {
-      type: 'object',
-      properties: {
-        id: { type: 'number', description: 'The ID of the updated facility.' },
-        name: { type: 'string', description: 'The updated name of the facility.' },
-        // Add other properties of the Facility entity here
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Facility not found.',
-  })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: 'Invalid input data.',
-  })
-  async update(@Param('id') id: string, @Body() updateFacilityDto: UpdateFacilityDto): Promise<any> {
-    // Adjust return type based on what your service actually returns
-    return await this.facilityService.update(+id, updateFacilityDto);
+  @ApiOperation({ summary: 'Update site' })
+  @Patch('sites/:id')
+  updateSite(@Param('id') id: string, @Body() dto: UpdateSiteDto) {
+    return this.siteService.update(id, dto);
   }
 
-  @Delete(':id') // Changed from 'building/:id' to just ':id'
-  @ApiOperation({ summary: 'Delete a facility', description: 'Deletes a facility record identified by its ID.' })
-  @ApiParam({ name: 'id', type: Number, description: 'The unique identifier of the facility to delete.' })
-  @ApiResponse({
-    status: HttpStatus.NO_CONTENT, // 204 No Content is common for successful deletion with no body
-    description: 'The facility has been successfully deleted.',
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Facility not found.',
-  })
-  async remove(@Param('id') id: string): Promise<void> {
-    // Assuming remove method doesn't return anything on success
-    await this.facilityService.remove(+id);
+  @ApiOperation({ summary: 'Delete site' })
+  @Delete('sites/:id')
+  removeSite(@Param('id') id: string) {
+    return this.siteService.remove(id);
+  }
+
+  // Buildings
+  @ApiOperation({ summary: 'Create building' })
+  @Post('buildings')
+  createBuilding(@Body() dto: CreateBuildingDto) {
+    return this.buildingService.create(dto);
+  }
+
+  @ApiOperation({ summary: 'List buildings' })
+  @Get('buildings')
+  findAllBuildings() {
+    return this.buildingService.findAll();
+  }
+
+  @ApiOperation({ summary: 'Get building by id' })
+  @Get('buildings/:id')
+  findBuilding(@Param('id') id: string) {
+    return this.buildingService.findOne(id);
+  }
+
+  @ApiOperation({ summary: 'Update building' })
+  @Patch('buildings/:id')
+  updateBuilding(@Param('id') id: string, @Body() dto: UpdateBuildingDto) {
+    return this.buildingService.update(id, dto);
+  }
+
+  @ApiOperation({ summary: 'Delete building' })
+  @Delete('buildings/:id')
+  removeBuilding(@Param('id') id: string) {
+    return this.buildingService.remove(id);
+  }
+
+  // Appliances
+  @ApiOperation({ summary: 'Create appliance' })
+  @Post('appliances')
+  createAppliance(@Body() dto: CreateApplianceDto) {
+    return this.applianceService.create(dto);
+  }
+
+  @ApiOperation({ summary: 'List appliances' })
+  @Get('appliances')
+  findAllAppliances() {
+    return this.applianceService.findAll();
+  }
+
+  @ApiOperation({ summary: 'Get appliance by id' })
+  @Get('appliances/:id')
+  findAppliance(@Param('id') id: string) {
+    return this.applianceService.findOne(id);
+  }
+
+  @ApiOperation({ summary: 'Update appliance' })
+  @Patch('appliances/:id')
+  updateAppliance(@Param('id') id: string, @Body() dto: UpdateApplianceDto) {
+    return this.applianceService.update(id, dto);
+  }
+
+  @ApiOperation({ summary: 'Delete appliance' })
+  @Delete('appliances/:id')
+  removeAppliance(@Param('id') id: string) {
+    return this.applianceService.remove(id);
+  }
+
+  // Furniture
+  @ApiOperation({ summary: 'Create furniture' })
+  @Post('furniture')
+  createFurniture(@Body() dto: CreateFurnitureDto) {
+    return this.furnitureService.create(dto);
+  }
+
+  @ApiOperation({ summary: 'List furniture' })
+  @Get('furniture')
+  findAllFurniture() {
+    return this.furnitureService.findAll();
+  }
+
+  @ApiOperation({ summary: 'Get furniture by id' })
+  @Get('furniture/:id')
+  findFurniture(@Param('id') id: string) {
+    return this.furnitureService.findOne(id);
+  }
+
+  @ApiOperation({ summary: 'Update furniture' })
+  @Patch('furniture/:id')
+  updateFurniture(@Param('id') id: string, @Body() dto: UpdateFurnitureDto) {
+    return this.furnitureService.update(id, dto);
+  }
+
+  @ApiOperation({ summary: 'Delete furniture' })
+  @Delete('furniture/:id')
+  removeFurniture(@Param('id') id: string) {
+    return this.furnitureService.remove(id);
+  }
+
+  // Vehicles
+  @ApiOperation({ summary: 'Create vehicle' })
+  @Post('vehicles')
+  createVehicle(@Body() dto: CreateVehicleDto) {
+    return this.vehicleService.create(dto);
+  }
+
+  @ApiOperation({ summary: 'List vehicles' })
+  @Get('vehicles')
+  findAllVehicles() {
+    return this.vehicleService.findAll();
+  }
+
+  @ApiOperation({ summary: 'Get vehicle by id' })
+  @Get('vehicles/:id')
+  findVehicle(@Param('id') id: string) {
+    return this.vehicleService.findOne(id);
+  }
+
+  @ApiOperation({ summary: 'Update vehicle' })
+  @Patch('vehicles/:id')
+  updateVehicle(@Param('id') id: string, @Body() dto: UpdateVehicleDto) {
+    return this.vehicleService.update(id, dto);
+  }
+
+  @ApiOperation({ summary: 'Delete vehicle' })
+  @Delete('vehicles/:id')
+  removeVehicle(@Param('id') id: string) {
+    return this.vehicleService.remove(id);
+  }
+
+  // Maintenance
+  @ApiOperation({ summary: 'Create maintenance record' })
+  @Post('maintenance')
+  createMaintenance(@Body() dto: CreateMaintenanceDto) {
+    return this.maintenanceService.create(dto);
+  }
+
+  @ApiOperation({ summary: 'List maintenance records' })
+  @Get('maintenance')
+  findAllMaintenance() {
+    return this.maintenanceService.findAll();
+  }
+
+  @ApiOperation({ summary: 'Get maintenance record by id' })
+  @Get('maintenance/:id')
+  findMaintenance(@Param('id') id: string) {
+    return this.maintenanceService.findOne(id);
+  }
+
+  @ApiOperation({ summary: 'Update maintenance record' })
+  @Patch('maintenance/:id')
+  updateMaintenance(@Param('id') id: string, @Body() dto: UpdateMaintenanceDto) {
+    return this.maintenanceService.update(id, dto);
+  }
+
+  @ApiOperation({ summary: 'Delete maintenance record' })
+  @Delete('maintenance/:id')
+  removeMaintenance(@Param('id') id: string) {
+    return this.maintenanceService.remove(id);
   }
 }

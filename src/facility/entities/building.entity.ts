@@ -1,20 +1,38 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Floor } from "./floor.entity";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, JoinColumn } from 'typeorm';
+import { Site } from './site.entity';
+import { Appliance } from './appliance.entity';
+import { Furniture } from './furniture.entity';
 
-@Entity({})
+@Entity({ name: 'buildings' })
 export class Building {
-    
-    @PrimaryGeneratedColumn({})
-    id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column({})
-    name: string;
+  @Column()
+  name: string;
 
-    @Column({})
-    campus: string;
+  @Column()
+  floors: number;
 
-    @OneToMany(() => Floor, (floor) => floor.building)
-    floors: Floor[];
+  @Column()
+  rooms: number;
 
+  @Column('date')
+  dateCommissioned: Date;
+
+  @Column()
+  status: string; // e.g., 'operational', 'under construction', 'closed'
+
+  // A building belongs to one site.
+  @ManyToOne(() => Site, (site) => site.buildings)
+  @JoinColumn({ name: 'siteId' })
+  site: Site;
+
+  // A building can have many appliances.
+  @OneToMany(() => Appliance, (appliance) => appliance.building)
+  appliances: Appliance[];
+
+  // A building can have many furniture items.
+  @OneToMany(() => Furniture, (furniture) => furniture.building)
+  furniture: Furniture[];
 }
