@@ -1,0 +1,86 @@
+# SYSTEM SPECIFICATION: OWL (SCHOOL MANAGEMENT SYSTEM)
+
+## 1. PROJECT CONTEXT
+You are to act as a Senior Backend Engineer. We are building "Owl," a comprehensive School Management System. 
+The system requires a robust REST API backend that serves a Modular Angular Frontend.
+The architecture must be scalable, strictly typed, and follow SOLID principles.
+
+## 2. TECHNOLOGY STACK
+- **Framework:** NestJS (Node.js)
+- **Language:** TypeScript
+- **Database:** PostgreSQL
+- **ORM:** TypeORM
+- **Authentication:** Passport (JWT Strategy) with Role-Based Access Control (RBAC)
+- **Validation:** class-validator & class-transformer
+- **Documentation:** Swagger (OpenAPI)
+- **Frontend Context:** Angular (Modular Architecture) - *Keep this in mind for API response formatting.*
+
+## 3. USER ROLES & PERMISSIONS
+The system has 4 distinct user roles (Enum: UserRole).
+1. **ADMIN:** - Manage users (create/delete/suspend).
+   - Manage institution structure (Classes, Subjects).
+   - Assign roles (e.g., assign a Staff as a "Class Teacher").
+   - **Finance:** Define Fee Structures, View Transaction Logs, Confirm offline payments.
+2. **STAFF:** - Manage curriculum/lesson notes.
+   - Create assessments/tests & Grade submissions.
+   - Mark attendance.
+   - **Bursary Access (Optional permission):** If authorized, can record cash payments received from parents.
+3. **STUDENT:** - Take CBT tests & Submit assignments.
+   - View results/report cards.
+   - **Finance:** View Fee Invoice and Payment History.
+4. **GUARDIAN:** - View performance (Results/Attendance) of wards.
+   - **Finance:** View outstanding balances, View Payment History, Initiate Payments (Gateway integration).
+
+## 4. DATABASE ENTITY RELATIONSHIPS (Draft Schema)
+Use these relationships to design the Entities:
+
+### A. User Management
+- **User:** (id, email, password_hash, role, isActive)
+- **Profile:** separate tables or polymorphic relation for `StaffProfile`, `StudentProfile`, `GuardianProfile`.
+- **GuardianStudent:** A Many-to-Many relationship (A guardian can have multiple wards).
+
+### B. Academic Structure
+- **Session:** (e.g., "2024/2025")
+- **Term:** (e.g., "First Term") linked to Session.
+- **ClassLevel:** (e.g., "JSS 1").
+- **ClassArm:** (e.g., "JSS 1 Gold"). 
+- **Subject:** (e.g., "Mathematics").
+- **SubjectAllocation:** Links a `Staff` to a `Subject` in a specific `ClassArm`.
+
+### C. Assessments & Results
+- **Assessment:** (title, type, total_marks, class_arm_id, teacher_id).
+- **Submission:** (student_id, assessment_id, score).
+- **ReportCard:** Aggregated data per term per student.
+
+### D. Finance & Fees (NEW)
+- **FeeHead:** Categorization of fees (e.g., "Tuition", "Uniform", "Bus Service").
+- **FeeStructure:** Defines how much a specific `ClassLevel` pays for a `FeeHead` in a specific `Session/Term`.
+  - *Fields:* amount, due_date, class_level_id, fee_head_id, session_id.
+- **StudentFeeMap:** (Optional) Handles exceptions (e.g., Scholarship students who pay 0, or students using specific services like Bus).
+- **Transaction:** Records actual payments.
+  - *Fields:* student_id, amount_paid, payment_method (Cash/Card/Transfer), reference_code, status (Pending/Success), date.
+
+### E. Communication
+- **Ticket:** (title, description, status, user_id).
+- **Message:** (sender_id, receiver_id, content).
+
+## 5. MODULE ARCHITECTURE
+Organize the NestJS application into the following modules:
+1. **AuthModule:** Login, Register, JWT Strategy, Guards.
+2. **UsersModule:** User CRUD, Profile management.
+3. **AcademicModule:** Managing Classes, Arms, Subjects, Allocations.
+4. **AssessmentModule:** Tests, Questions, Grading logic.
+5. **FinanceModule:** Fee Structure management, Transaction recording, Balance calculations, Payment Gateway integration service.
+6. **AttendanceModule:** Daily register logic.
+7. **CommunicationModule:** WebSockets/Gateway for Messaging.
+
+## 6. INSTRUCTIONS FOR GENERATION
+When I ask you to generate code, adhere to these rules:
+1. **DTOs:** Always create DTOs for input validation.
+2. **Services:** Keep business logic in Services, not Controllers.
+3. **Typing:** Strict typing. No `any`.
+4. **Error Handling:** Use NestJS `HttpException`.
+5. **Finance Logic:** Ensure database transactions (QueryRunner) are used when processing payments to prevent partial updates.
+
+---
+*End of Specification*

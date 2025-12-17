@@ -15,10 +15,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    return { 
-      email: payload.email, 
+    return {
+      email: payload.email,
       role: payload.role,
-      password: payload.password
+      id: payload.sub // validating user by id is also common, but role is what we care about here
     };
   }
 }

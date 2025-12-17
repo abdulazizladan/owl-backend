@@ -1,29 +1,29 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, JoinColumn, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, JoinColumn, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, ManyToMany, JoinTable } from "typeorm";
 import { Info } from "./info.entity";
-import { Role } from "../enums/role.enum";
+import { UserRole } from "../enums/user-role.enum";
 import * as bcrypt from "bcrypt";
 import { Contact } from "./contact.entity";
-import { Status } from "../enums/status.enum";
+// import { Status } from "../enums/status.enum"; // Deprecated/Removed in favor of isActive
 
 import { Exclude } from "class-transformer";
 
-import { IsEmail, IsEnum, IsString, IsOptional, IsDate, IsArray, IsNumber } from "class-validator";
-import { Form } from "src/classroom/entities/form.entity";
-import { Classroom } from "src/classroom/entities/classroom.entity";
+import { IsEmail, IsEnum, IsString, IsOptional, IsDate, IsBoolean, IsNumber } from "class-validator";
+import { ClassArm } from "src/academic/entities/class-arm.entity";
+import { ClassLevel } from "src/academic/entities/class-level.entity";
 
-@Entity({name: "User"})
+@Entity({ name: "User" })
 export class User {
     /**
      * Unique identifier for the user (Primary Key)
      */
     @PrimaryGeneratedColumn({})
     @IsNumber()
-    id:number;
-     
+    id: number;
+
     /**
      * Unique email address of the user
      */
-    @Column({unique: true})
+    @Column({ unique: true })
     @IsEmail()
     email: string;
 
@@ -31,35 +31,36 @@ export class User {
      * Hashed password for the user (excluded from serialization)
      */
     @Exclude()
-    @Column({default: "password"})
+    @Column({ name: 'password_hash' })
     @IsString()
-    password: string;
+    password_hash: string;
 
     /**
-     * Role of the user (admin, director, manager)
+     * Role of the user (ADMIN, STAFF, STUDENT, GUARDIAN)
      */
-    @Column({type: 'text', enum: Role})
-    @IsEnum(Role)
-    role: Role;
+    @Column({ type: 'text', enum: UserRole })
+    @IsEnum(UserRole)
+    role: UserRole;
 
     /**
-     * Status of the user (active, inactive, etc.)
+     * Account status (active vs inactive/suspended)
      */
-    @Column({type: 'text', enum: Status, default: Status.pending})
-    @IsEnum(Status)
-    status: Status;
+    @Column({ default: true })
+    @IsBoolean()
+    isActive: boolean;
+
 
     /**
      * Date when the user was created
      */
-    @CreateDateColumn({default: Date.now()})
+    @CreateDateColumn({ default: Date.now() })
     @IsDate()
     createdAt: Date;
 
     /**
      * One-to-one relation to Info entity (user's personal info)
      */
-    @OneToOne((type) => Info, info => info.user) 
+    @OneToOne((type) => Info, info => info.user)
     @IsOptional()
     info: Info;
 
@@ -68,17 +69,35 @@ export class User {
      */
     @OneToOne((type) => Contact, contact => contact.user)
     @IsOptional()
-    contact: Contact; 
+    contact: Contact;
 
-    @OneToOne((type) => Form, form => form.formMaster)
-    @IsOptional()
-    form: Form;
+    // @OneToOne((type) => Form, form => form.formMaster) // TODO: Re-implement Class Teacher logic if needed
+    // @IsOptional()
+    // form: Form;
 
-    @ManyToOne((type) => Classroom, classroom => classroom.students)
-    classroom: Classroom
-    
+    @ManyToOne((type) => ClassArm, classArm => classArm.students)
+    @JoinColumn({ name: 'class_arm_id' })
+    classArm: ClassArm
+
+    /**
+     * Wards (Students) associated with this user (if Guardian)
+     */
+    @ManyToMany(() => User, user => user.guardians)
+    @JoinTable({
+        name: "user_wards",
+        joinColumn: { name: "guardian_id", referencedColumnName: "id" },
+        inverseJoinColumn: { name: "student_id", referencedColumnName: "id" }
+    })
+    wards: User[];
+
+    /**
+     * Guardians associated with this user (if Student)
+     */
+    @ManyToMany(() => User, user => user.wards)
+    guardians: User[];
+
     async validatePassword(password: string): Promise<boolean> {
-        return bcrypt.compare(password, this.password);
+        return bcrypt.compare(password, this.password_hash);
     }
 
     /**

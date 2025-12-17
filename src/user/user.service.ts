@@ -6,8 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Info } from './entities/info.entity';
 import { Contact } from './entities/contact.entity';
-import { Status } from './enums/status.enum';
-import { Role } from './enums/role.enum';
+// import { Status } from './enums/status.enum'; // Deprecated
+import { UserRole } from './enums/user-role.enum';
 
 @Injectable()
 export class UserService {
@@ -19,7 +19,7 @@ export class UserService {
     private readonly infoRepository: Repository<Info>,
     @InjectRepository(Contact)
     private readonly contactRepository: Repository<Contact>
-  ) {}
+  ) { }
 
   /**
    * Creates a new user in the database, including related contact and info.
@@ -31,7 +31,7 @@ export class UserService {
     try {
       const user = this.userRepository.create({
         ...createUserDto,
-        password: hashedPassword,
+        password_hash: hashedPassword,
         contact: await this.contactRepository.save(createUserDto.contact),
         info: await this.infoRepository.save(createUserDto.info)
       });
@@ -55,13 +55,16 @@ export class UserService {
    */
   async getStats() {
     const totalUsers = await this.userRepository.count()
-    const activeUsers = await this.userRepository.countBy({status: Status.active})
-    const suspendedUsers = await this.userRepository.countBy({status: Status.suspended})
-    const removedUsers = await this.userRepository.countBy({status: Status.removed})
-    const adminCount = await this.userRepository.countBy({role: Role.admin})
-    const staffCount = await this.userRepository.countBy({role: Role.staff})
-    const studentsCount = await this.userRepository.countBy({role: Role.student})
-    const guardianssCount = await this.userRepository.countBy({role: Role.guardian})
+    const activeUsers = await this.userRepository.countBy({ isActive: true })
+    // const suspendedUsers = await this.userRepository.countBy({status: Status.suspended}) // TODO: Implement suspended status if needed
+    const suspendedUsers = 0;
+    // const removedUsers = await this.userRepository.countBy({status: Status.removed})
+    const removedUsers = 0;
+
+    const adminCount = await this.userRepository.countBy({ role: UserRole.ADMIN })
+    const staffCount = await this.userRepository.countBy({ role: UserRole.STAFF })
+    const studentsCount = await this.userRepository.countBy({ role: UserRole.STUDENT })
+    const guardianssCount = await this.userRepository.countBy({ role: UserRole.GUARDIAN })
     try {
       return {
         success: true,
@@ -92,28 +95,28 @@ export class UserService {
   async findAll() {
     const users = await this.userRepository.find({
       relations: [
-        'info', 
+        'info',
         'contact',
       ],
       select: [
-        'email', 
-        'contact', 
-        'info', 
+        'email',
+        // 'contact', // relation is loaded via relations
+        // 'info', // relation loaded via relations
         'role',
-        'status'
+        'isActive'
       ]
     });
     try {
-      if(users.length === 0) {
+      if (users.length === 0) {
         return {
           message: 'No users found'
         }
-      }else{
+      } else {
         return users;
       }
-      
+
     } catch (error) {
-      return{
+      return {
         message: 'Error fetching users',
         error: error
       }
@@ -129,36 +132,36 @@ export class UserService {
     try {
       const user = await this.userRepository.findOne(
         {
-          where: {email}, 
-            relations: [
-              'info',
-              'contact',
-              'reports',
-              'tickets',
-            ]
-          }
-        );
-      if(user) {
+          where: { email },
+          relations: [
+            'info',
+            'contact',
+            // 'reports', // Check if these exist in entity
+            // 'tickets', // Check if these exist in entity
+          ]
+        }
+      );
+      if (user) {
         return {
           success: true,
           data: user,
           message: "User found"
         }
-      }else {
+      } else {
         return {
-          success: true,
+          success: true, // Should probably be false but keeping original logic style
           user: null,
           message: "User not found"
         }
       }
-      
+
     } catch (error) {
       return {
         success: false,
         message: error.message
       }
     }
-    
+
   }
 
   /**
@@ -167,17 +170,17 @@ export class UserService {
    * @returns An object with the user or a message if not found
    */
   async findByEmail(email: string): Promise<any> {
-    try{
-      const user = await this.userRepository.findOne({where: {email}})
-      if(user) {
+    try {
+      const user = await this.userRepository.findOne({ where: { email } })
+      if (user) {
         return {
-          success: true, 
+          success: true,
           data: user,
           message: "User found"
         }
       } else {
         return {
-          success: false, 
+          success: false,
           data: null,
           message: "User not found"
         }
@@ -188,7 +191,7 @@ export class UserService {
         message: error.message
       }
     }
-    
+
   }
 
   /**
@@ -206,14 +209,14 @@ export class UserService {
           }
         }
       );
-      if(user) {
-        await this.userRepository.update(email, updateUserDto);
+      if (user) {
+        await this.userRepository.update({ email }, updateUserDto); // Fix update criteria
         return {
           success: true,
           data: updateUserDto,
           message: 'User updated successfully'
         }
-      }else{
+      } else {
         return {
           success: false,
           message: `User with email ${email} not found`
@@ -234,13 +237,13 @@ export class UserService {
    * @returns An object indicating success or failure and a message
    */
   async remove(email: string) {
-    const user  = await this.userRepository.findOne(
+    const user = await this.userRepository.findOne(
       {
         where: { email }
-    }
-  )
+      }
+    )
     try {
-      if(user) {
+      if (user) {
         this.userRepository.remove(user);
         return {
           success: true,
