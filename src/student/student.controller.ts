@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   HttpStatus, // Import HttpStatus for clear response codes
+  Request,
 } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { CreateStudentDto } from './dto/create-student.dto';
@@ -20,6 +21,10 @@ import {
   ApiBody, // For documenting request bodies
   ApiParam, // For documenting path parameters
 } from '@nestjs/swagger';
+import { UserRole } from '../user/enums/user-role.enum';
+import { Roles } from '../auth/roles.decorator';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/roles.guard';
 
 // Assuming you have a Student entity/model for response types
 // import { Student } from './entities/student.entity'; // Example, adjust path as needed
@@ -29,7 +34,17 @@ import {
 @ApiBearerAuth() // Indicates that all endpoints in this controller require a bearer token
 @Controller('student')
 export class StudentController {
-  constructor(private readonly studentService: StudentService) {}
+  constructor(private readonly studentService: StudentService) { }
+
+  @Get('profile')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.STUDENT)
+  @ApiOperation({ summary: 'Get logged-in student profile' })
+  async getProfile(@Request() req) {
+    // req.user has email from JWT
+    return this.studentService.findByEmail(req.user.email);
+  }
 
   @Post()
   @ApiOperation({
@@ -63,6 +78,13 @@ export class StudentController {
   async create(@Body() createStudentDto: CreateStudentDto): Promise<any> {
     // Adjust return type based on what your service actually returns
     return await this.studentService.create(createStudentDto);
+  }
+
+  @Post('enroll')
+  @ApiOperation({ summary: 'Enroll a new student (Registrar/Admin)' })
+  @Roles(UserRole.STAFF, UserRole.ADMIN)
+  async enroll(@Body() createStudentDto: CreateStudentDto) {
+    return await this.studentService.enroll(createStudentDto);
   }
 
   @Get()

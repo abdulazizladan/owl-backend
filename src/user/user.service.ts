@@ -231,6 +231,18 @@ export class UserService {
     }
   }
 
+  async updateStatus(email: string, isActive: boolean) {
+    const user = await this.findByEmail(email);
+    if (!user.success) {
+      return user;
+    }
+    await this.userRepository.update({ email }, { isActive });
+    return {
+      success: true,
+      message: `User status updated to ${isActive ? 'Active' : 'Inactive'}`
+    };
+  }
+
   /**
    * Deletes a user by email.
    * @param email - The email of the user

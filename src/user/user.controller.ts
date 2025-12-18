@@ -95,6 +95,13 @@ export class UserController {
     return this.userService.update(email, updateUserDto);
   }
 
+  @Patch(':email/status')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Update user status (Enable/Disable)' })
+  updateStatus(@Param('email') email: string, @Body() statusDto: import('./dto/update-user-status.dto').UpdateUserStatusDto) {
+    return this.userService.updateStatus(email, statusDto.isActive);
+  }
+
   /**
    * Remove a user by email.
    * Accessible by ADMIN only.

@@ -1,14 +1,15 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToOne, OneToMany } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, OneToOne, OneToMany, JoinColumn } from "typeorm";
 import { StudentStatus } from "../enum/studentStatus.enum";
 import { MedicalInformation } from "./medical-record.entity";
 import { AcademicRecord } from "./academic-record.entity";
+import { User } from "../../user/entities/user.entity";
 
-@Entity({name: 'Student'})
+@Entity({ name: 'Student' })
 export class Student {
-    @PrimaryGeneratedColumn({name: 'student_id'})
+    @PrimaryGeneratedColumn({ name: 'student_id' })
     id: number;
 
-    @Column({unique: true, nullable: false})
+    @Column({ unique: true, nullable: false })
     admissionNumber: number;
 
     @Column({})
@@ -32,8 +33,8 @@ export class Student {
     @Column({ default: StudentStatus.ACTIVE })
     status: StudentStatus;
 
-    @Column({nullable: true})
-    dateGraduated: Date;    
+    @Column({ nullable: true })
+    dateGraduated: Date;
 
     @OneToMany(() => AcademicRecord, (academicRecord) => academicRecord.student)
     academic_records: AcademicRecord[];
@@ -41,4 +42,8 @@ export class Student {
     @OneToOne(() => MedicalInformation, (medicalInformation) => medicalInformation.student)
     medical_information: MedicalInformation;
 
-}
+    @OneToOne(() => User)
+    @JoinColumn()
+    user: User;
+
+} 

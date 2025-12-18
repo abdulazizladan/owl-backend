@@ -29,12 +29,23 @@ export class StudentService {
         data: student,
         message: "Studded added successfully"
       }
-    }catch (error) {
+    } catch (error) {
       return {
         success: false,
         message: error.message
       }
     }
+  }
+
+  async enroll(createStudentDto: CreateStudentDto) {
+    // Auto-generate Admission Number if not provided (mock logic)
+    const admissionAttr = { ...createStudentDto };
+    if (!admissionAttr.admissionNumber) {
+      // Simple number generation
+      admissionAttr.admissionNumber = Math.floor(Date.now() / 1000);
+    }
+
+    return this.create(admissionAttr as any);
   }
 
   /**
@@ -44,13 +55,13 @@ export class StudentService {
   async findAll(): Promise<any> {
     try {
       const students = await this.studentRepository.find({});
-      if(students.length == 0) {
+      if (students.length == 0) {
         return {
           success: true,
           data: null,
           message: "No students found"
         }
-      }else {
+      } else {
         return {
           success: true,
           data: students,
@@ -67,21 +78,21 @@ export class StudentService {
 
   async findOne(id: number) {
     try {
-      const data = await this.studentRepository.findOne({where: { id }});
-      if(data) {
+      const data = await this.studentRepository.findOne({ where: { id } });
+      if (data) {
         return {
           success: true,
           data: data,
           message: "Student found successfully"
         }
-      }else {
+      } else {
         return {
           success: true,
           data: null,
           message: "Student not found"
         }
       }
-    } catch(error) {
+    } catch (error) {
       return {
         success: false,
         message: error.message
@@ -95,8 +106,8 @@ export class StudentService {
       return {
         success: true,
         message: "Student updated successfully"
-        }
-    } catch( error) {
+      }
+    } catch (error) {
       return {
         success: false,
         message: error.message
@@ -119,7 +130,33 @@ export class StudentService {
     } catch (error) {
       return {
         success: false,
-        message: error.message 
+        message: error.message
+      }
+    }
+  }
+  async findByEmail(email: string) {
+    try {
+      const data = await this.studentRepository.findOne({
+        where: { user: { email } },
+        relations: ['user']
+      });
+      if (data) {
+        return {
+          success: true,
+          data: data,
+          message: "Student found successfully"
+        }
+      } else {
+        return {
+          success: true,
+          data: null,
+          message: "Student not found"
+        }
+      }
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message
       }
     }
   }

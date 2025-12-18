@@ -1,0 +1,37 @@
+Owl SMS: Refined Framework
+1. Administrative Hub (System Level)
+Focus: Infrastructure, security, and oversight.
+System Dashboard: Overview of school-wide stats (total enrollment, revenue, active tickets).
+User Management: Global "Super-Admin" control to add/enable/disable staff and guardian accounts.
+Institution Settings: Manage sessions, terms, and school-wide grading scales.
+Support Ticket System: Manage technical issues with statuses: Active, Resolved, Terminated.
+Audit Trail: Detailed logs of user activities (filterable by date/user) for accountability.
+
+2. Staff Portal (Academic & Operations)
+Focus: Specialized roles for school management.
+Principal: Teacher recruitment/onboarding, performance oversight, and high-level parent communication.
+Bursar: Fee management, payment verification, and automated receipt generation.
+Enrolment Officer: New student registration and student file management.
+Teacher/Academic Staff:
+Subject Management: Create subjects and link them to classrooms.
+Class Management: Assign Form Teachers to specific arms (e.g., JSS1 Gold).
+Academic Tools: Input scores, manage attendance, and set assignments.
+Specialized Staff:
+Nurse: Student health logs, allergy tracking, and medical incident reports.
+Librarian: Book cataloging and borrowing history.
+
+3. Student Portal (Learning & Engagement)
+Focus: Self-service academic tracking.
+Academic Profile: Current subjects, personalized timetable, and school calendar.
+Assignment Center: Deadlines, reminders, file uploads, and graded feedback.
+Performance Tracking: Termly scores and cumulative GPA.
+CBT Practice: Self-paced mock exams with instant feedback/corrections (JAMB/WAEC prep style).
+
+4. Guardian Portal (The "Home-School" Bridge)
+Focus: Monitoring and direct engagement.
+Ward Overview: View multiple children under one account.
+360° Performance:
+Cognitive: Grades for tests, assignments, and exams.
+Affective/Psychomotor: Tracking persistence, dexterity, and collaboration.
+Attendance: Percentage-based view of school presence.
+Financials: View upcoming bills, pay fees online, and download receipts.

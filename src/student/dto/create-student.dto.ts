@@ -19,33 +19,33 @@ class MedicalInformation {
 
 export class CreateStudentDto {
 
-    @ApiProperty({description: ''})
+    @ApiProperty({ description: '' })
     admissionNumber: number;
 
-    @ApiProperty({description: ''})
+    @ApiProperty({ description: '' })
     firstName: string;
 
-    @ApiProperty({description: ''})
+    @ApiProperty({ description: '' })
     middleName: string;
 
-    @ApiProperty({description: ''})
+    @ApiProperty({ description: '' })
     lastName: string;
 
-    @ApiProperty({description: ''})
+    @ApiProperty({ description: '' })
     gender: 'M' | 'F';
 
-    @ApiProperty({default: Date.now()})
+    @ApiProperty({ default: Date.now() })
     dateOfBirth: Date;
 
-    @ApiProperty({default: Date.now()})
+    @ApiProperty({ default: Date.now() })
     dateEnrolled: Date;
 
-    @ApiProperty({type: 'string'})
+    @ApiProperty({ type: 'string' })
     status: StudentStatus;
 
-    @ApiProperty({ isArray: true})
-    academic_records: AcademicRecords[];
+    // @ApiProperty({ isArray: true})
+    // academic_records: AcademicRecords[];
 
-    @ApiProperty({nullable: true})
+    @ApiProperty({ nullable: true })
     medicalInformation: MedicalInformation;
 }

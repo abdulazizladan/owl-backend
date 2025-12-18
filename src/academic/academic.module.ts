@@ -7,6 +7,10 @@ import { ClassArm } from './entities/class-arm.entity';
 import { Subject } from './entities/subject.entity';
 import { SubjectAllocation } from './entities/subject-allocation.entity';
 
+import { AcademicService } from './academic.service';
+import { AcademicController } from './academic.controller';
+import { AcademicRecord } from '../student/entities/academic-record.entity';
+
 @Module({
     imports: [
         TypeOrmModule.forFeature([
@@ -15,11 +19,12 @@ import { SubjectAllocation } from './entities/subject-allocation.entity';
             ClassLevel,
             ClassArm,
             Subject,
-            SubjectAllocation
+            SubjectAllocation,
+            AcademicRecord // Register here as we use it in service
         ])
     ],
-    controllers: [],
-    providers: [],
-    exports: [TypeOrmModule]
+    controllers: [AcademicController],
+    providers: [AcademicService],
+    exports: [TypeOrmModule, AcademicService]
 })
 export class AcademicModule { }
